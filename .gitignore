@@ -1,0 +1,9 @@
+tags
+TAGS
+*.swp
+*.bak
+*.o
+*.orig
+._*
+.DS_Store
+bin/*
