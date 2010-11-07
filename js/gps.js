@@ -11,6 +11,7 @@ var mapInitialized = false;
 var lastLatitude = null;
 var lastLongitude = null;
 var lastDiff = 0;
+var watchId = null;
 
 // for debug
 var debug_index = 0;
@@ -18,10 +19,6 @@ var debug_add_p = 0;
 
 
 function initialize() {
-	DB.open(function() {
-		DB.getPositions(setWalked);
-	});
-
 	goal = localStorage.getItem("goal");
 	if (goal) {
 		goal = parseInt(goal);
@@ -31,9 +28,13 @@ function initialize() {
 		localStorage.setItem("goal", goal);
 	}
 
+	DB.open(function() {
+		DB.getPositions(setWalked);
+	});
+
 	if (navigator.geolocation) {
 		statusView = document.querySelector('#status');
-		navigator.geolocation.watchPosition(success, error, {enableHighAccuracy: true});
+		watchId = navigator.geolocation.watchPosition(success, error, {enableHighAccuracy: true});
 	} else {
 		error('geolocation is not supported');
 	}
@@ -47,6 +48,14 @@ function unloadMap() {
 	startMarker = null;
 	endMarker = null;
 	mapInitialized = false;
+	lastLatitude = null;
+	lastLongitude = null;
+	lastDiff = 0;
+
+	if (watchId) {
+		navigator.geolocation.clearWatch(watchId);
+		watchId = null;
+	}
 }
 
 function loadMap() {
@@ -100,14 +109,16 @@ function addPosition(latitude, longitude, toInsertDB) {
 		lastDiff = getMeter(latitude, longitude, lastLatitude, lastLongitude);
 
 	// check threshold
-	if (lastLatitude != null && lastLongitude != null && (lastDiff < 30.0 || 200.0 < lastDiff))
+	//if (lastLatitude != null && lastLongitude != null && (lastDiff < 30.0 || 500.0 < lastDiff))
+	if (lastLatitude != null && lastLongitude != null && lastDiff < 30.0)
 		return;
 
-	debug_add_p++;
-
-	walked += lastDiff;
-	lastLatitude = latitude;
-	lastLongitude = longitude;
+	if (toInsertDB) {
+		debug_add_p++;
+		walked += lastDiff;
+		lastLatitude = latitude;
+		lastLongitude = longitude;
+	}
 
 	var latlng = new google.maps.LatLng(latitude, longitude);
 	statusView.innerHTML = latlng;
@@ -185,7 +196,8 @@ function getMeter(lat1, lng1, lat2, lng2) {
 
 function updateCurrentMeter() {
 	var statusString = walked.toFixed(0) + " / " + goal + " m";
-	var diffString = lastDiff.toFixed(3) + " m" + " (" + (++debug_index) + ", " + debug_add_p + ")";
+	var diffString = /*lastDiff.toFixed(3) + " m" +*/ " (" + (++debug_index) + ", " + debug_add_p + ")";
+	
 	document.getElementById("meter").innerHTML = statusString;
 	document.getElementById("status_move").innerHTML = statusString;
 
@@ -199,7 +211,7 @@ function setWalked(data) {
 		if (i != 0)
 			w += getMeter(data[i - 1].latitude, data[i - 1].longitude, data[i].latitude, data[i].longitude);
 	}
-	walked = w;
+	updateCurrentMeter();
 }
 
 function saveGoal(g) {
@@ -215,7 +227,12 @@ function saveGoal(g) {
 
 function clearAndReload() {
 	DB.clear();
+
+	if (watchId) {
+		navigator.geolocation.clearWatch(watchId);
+		watchId = null;
+	}
+
 	initialize();
 	alert('Cleared');
 }
-
