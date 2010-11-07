@@ -7,3 +7,4 @@ TAGS
 ._*
 .DS_Store
 bin/*
+*.wgt

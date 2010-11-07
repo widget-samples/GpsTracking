@@ -1,0 +1,5 @@
+GpsTracking project
+- A GPS Tracking Bada OS Widget with geolocation, Web SQL Database and Indexed DB
+
+ * source: http://github.com/widget-samples/GpsTracking/
+ * binary: http://jong10.net/publish/widget/GpsTracking.wgt
