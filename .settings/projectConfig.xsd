@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://samsung.widgetsdk.uievolution.com"
+	version="3"
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://samsung.widgetsdk.uievolution.com">
+
+	<xs:element name="widget" type="WidgetType"></xs:element>
+
+	<xs:complexType name="AuthType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="email" type="xs:string" use="optional" />
+				<xs:attribute name="href" type="xs:string" use="optional" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="WidgetType">
+        <xs:all>
+        	<xs:element name="description" type="xs:string"
+        		minOccurs="0" maxOccurs="1">
+        		<xs:annotation>
+        			<xs:documentation>
+        				A Description of the widget
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+        	<xs:element name="version" minOccurs="1">
+        		<xs:annotation>
+        			<xs:documentation>
+        				The version number has the following format:
+
+        				major.minor
+
+        				The major and minor numbers are required.
+
+        			</xs:documentation>
+        		</xs:annotation>
+        		<xs:simpleType>
+        			<xs:restriction base="xs:string">
+        				<xs:whiteSpace value="collapse"></xs:whiteSpace>
+        				<xs:pattern value="\d+\.\d+"></xs:pattern>
+        				<xs:maxLength value="10"></xs:maxLength>
+        			</xs:restriction>
+        		</xs:simpleType>
+        	</xs:element>
+        	<xs:element name="width" type="xs:int" minOccurs="1"
+        		maxOccurs="1" />
+        	<xs:element name="height" type="xs:int" minOccurs="1"
+        		maxOccurs="1" />
+        	<xs:element name="icon" type="xs:string" />
+        	<xs:element name="main" type="xs:string" />
+        	<xs:element name="network" type="xs:boolean" />
+        	<xs:element name="dockable" type="xs:boolean" minOccurs="0"
+        		maxOccurs="1" />
+        	<xs:element name="modes" type="xs:string" minOccurs="0"
+        		maxOccurs="1">
+        		<xs:annotation>
+        			<xs:documentation>
+        				This is deprecated
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+        	<xs:element name="defaultMode" type="xs:string">
+        		<xs:annotation>
+        			<xs:documentation>
+        				This is deprecated.
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+
+        	<xs:element name="author" type="AuthType" maxOccurs="1"
+        		minOccurs="0">
+        		<xs:annotation>
+        			<xs:documentation>
+        				The author of the widget
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+        	<xs:element name="license" type="xs:string" maxOccurs="1"
+        		minOccurs="0">
+        		<xs:annotation>
+        			<xs:documentation>
+        				Use this tag to specify any licensing text.
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+        	<xs:element name="groups" type="GroupListType" minOccurs="0"
+        		maxOccurs="1">
+        		<xs:annotation>
+        			<xs:documentation>
+        				This element contains all the feature groups.
+        				Examples would be the groups bondi and jil
+        			</xs:documentation>
+        		</xs:annotation>
+        	</xs:element>
+        	<xs:element name="preferences" type="PreferenceTypeList"
+        		minOccurs="0" maxOccurs="1">
+        	</xs:element>
+        	<xs:element name="tasks" type="TaskTypeList" minOccurs="0"
+        		maxOccurs="1">
+        	</xs:element>
+        	<xs:element name="calendar" type="CalendarEventTypeList"
+        		minOccurs="0" maxOccurs="1">
+        	</xs:element>
+        	<xs:element name="contacts" type="ContactTypeList"
+        		minOccurs="0" maxOccurs="1">
+        	</xs:element>
+        	<xs:element name="deviceinfo" type="DeviceStatusTypeList"
+        		minOccurs="0" maxOccurs="1">
+        	</xs:element>
+        	<xs:element name="location" type="LBSPositionType" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:all>
+
+        <xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+
+
+
+
+
+	<xs:complexType name="FeatureType">
+
+		<xs:sequence>
+			<xs:element name="param" type="ParamType" minOccurs="0"
+				maxOccurs="unbounded">
+			</xs:element>
+		</xs:sequence>
+        <xs:attribute name="name" type="xs:string"></xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI"></xs:attribute>
+		<xs:attribute name="required" type="xs:boolean"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ParamType">
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+		<xs:attribute name="value" type="xs:string" use="required"></xs:attribute>
+	</xs:complexType>
+
+
+	<xs:complexType name="GroupType">
+		<xs:sequence>
+			<xs:element name="feature" type="FeatureType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="GroupListType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="group" type="GroupType">
+				<xs:annotation>
+					<xs:documentation>Contains an instance of a feature group. An example would be the bondi feature grop.</xs:documentation>
+				</xs:annotation></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ModuleType">
+		<xs:sequence>
+			<xs:element name="feature" type="FeatureType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="PreferenceType">
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+		<xs:attribute name="value" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute name="required" type="xs:boolean" use="optional" default="false"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="PreferenceTypeList">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="preference" type="PreferenceType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="TaskType">
+        <xs:all>
+			<xs:element name="summary" type="xs:string" minOccurs="0" maxOccurs="1">
+			</xs:element>
+			<xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+		</xs:all>
+		<xs:attribute name="priority" type="xs:int"></xs:attribute>
+		<xs:attribute name="status" type="xs:int"></xs:attribute>
+		<xs:attribute name="date" type="xs:long"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="TaskTypeList">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="task" type="TaskType"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CalendarEventType">
+        <xs:all>
+        	<xs:element name="description" type="xs:string"></xs:element>
+        	<xs:element name="summary" type="xs:string"></xs:element>
+        	<xs:element name="location" type="xs:string"></xs:element>
+        </xs:all>
+
+        <xs:attribute name="start" type="xs:long"></xs:attribute>
+		<xs:attribute name="end" type="xs:long"></xs:attribute>
+		<xs:attribute name="recurrence" type="xs:short"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="CalendarEventTypeList">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="event" type="CalendarEventType"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ContactType">
+        <xs:all minOccurs="0" maxOccurs="1">
+        	<xs:element name="name" type="xs:string"></xs:element>
+        	<xs:element name="nickname" type="xs:string"></xs:element>
+        	<xs:element name="phone" type="xs:string"></xs:element>
+        	<xs:element name="email" type="xs:string"></xs:element>
+        	<xs:element name="photo" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+        	<xs:element name="address" type="AddressType"></xs:element>
+        </xs:all>
+	</xs:complexType>
+
+	<xs:complexType name="ContactTypeList">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+    		<xs:element name="contact" type="ContactType"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AddressType">
+    	<xs:sequence>
+    		<xs:element name="number" type="xs:string"></xs:element>
+    		<xs:element name="street" type="xs:string"></xs:element>
+    		<xs:element name="postalcode" type="xs:string"></xs:element>
+    		<xs:element name="city" type="xs:string"></xs:element>
+    		<xs:element name="region" type="xs:string"></xs:element>
+    		<xs:element name="country" type="xs:string"></xs:element>
+    	</xs:sequence>
+
+    </xs:complexType>
+
+    <xs:complexType name="DeviceStatusType">
+    	<xs:attribute name="property" type="xs:string"></xs:attribute>
+    	<xs:attribute name="value" type="xs:string"></xs:attribute>
+    	<xs:attribute name="aspect" type="xs:string"></xs:attribute>
+    	<xs:attribute name="component" type="xs:string"></xs:attribute>
+    	<xs:attribute name="isstring" type="xs:boolean"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="DeviceStatusTypeList">
+    	<xs:sequence>
+    		<xs:element name="devicestatus" type="DeviceStatusType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LBSPositionType">
+    	<xs:attribute name="latitude">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+    				<xs:minExclusive value="-90"></xs:minExclusive>
+    				<xs:maxInclusive value="90"></xs:maxInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="longitude">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+    				<xs:minInclusive value="-180"></xs:minInclusive>
+    				<xs:maxInclusive value="180"></xs:maxInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="accuracy">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+    				<xs:minInclusive value="0"></xs:minInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="altitude">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+
+
+
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="altitudeAccuracy">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+
+    				<xs:minInclusive value="0"></xs:minInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="heading">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+
+    				<xs:minInclusive value="0"></xs:minInclusive>
+
+    				<xs:maxInclusive value="360"></xs:maxInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	<xs:attribute name="speed">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:double">
+
+    				<xs:minInclusive value="0"></xs:minInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    </xs:complexType>
+</xs:schema>
